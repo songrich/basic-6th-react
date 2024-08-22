@@ -42,6 +42,7 @@ function TodoList() {
       }
     });
     setTodos(updateTodos);
+    console.log(updateTodos);
   };
   const deleteUpdated = function (id) {
     const deletedTodos = todos.filter((todo) => {
@@ -67,7 +68,7 @@ function TodoList() {
           return (
             <li key={todo.id}>
               <p>
-                {todo.text} - {String(todo.completed)}
+                {todo.text} - {todo.completed ? "완료됨" : "실행중"}
               </p>
               <button
                 onClick={function () {
