@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import TodoItem from "./TodoItem";
 
-function TodoList({ todos, toggleCompleted, deleteUpdated }) {
+import { TodoContext } from "../../context/TodoContext";
+
+function TodoList() {
+  const { todos, toggleCompleted, deleteUpdated } = useContext(TodoContext);
   return (
     <>
       <ul className="main-center">

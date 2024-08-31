@@ -1,4 +1,8 @@
-function TodoItem({ todo, toggleCompleted, deleteUpdated }) {
+import { useContext } from "react";
+import { TodoContext } from "../../context/TodoContext";
+
+function TodoItem({ todo }) {
+  const { toggleCompleted, deleteUpdated } = useContext(TodoContext);
   return (
     <li key={todo.id}>
       <p>
