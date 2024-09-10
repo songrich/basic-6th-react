@@ -14,6 +14,7 @@ function TodoForm() {
     const addTodo = {
       id: crypto.randomUUID(),
       text: newTodo,
+      completed: false,
     };
     addTodos(addTodo);
     setNewTodo("");

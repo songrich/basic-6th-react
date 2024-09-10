@@ -1,33 +1,41 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { SAMPLE_TODOS } from "../components/constants/sample-todo";
+import axios from "axios";
+import { todoClient } from "../api/todoClient";
 
 export const TodoContext = createContext();
 const TodoProvider = ({ children }) => {
-  const [todos, setTodos] = useState(SAMPLE_TODOS);
-  const addTodos = function (addTodo) {
-    setTodos([...todos, addTodo]);
+  const [todos, setTodos] = useState([]);
+
+  const fetchTodos = async () => {
+    const { data } = await todoClient.get("/");
+
+    setTodos(data);
   };
 
-  const toggleCompleted = function (id) {
-    const updateTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return {
-          ...todo,
-          completed: !todo.completed,
-        };
-      } else {
-        return todo;
-      }
-    });
-    setTodos(updateTodos);
-    console.log(updateTodos);
+  const addTodos = async function (addTodo) {
+    const { data } = await todoClient.post("/", addTodo);
+    fetchTodos();
   };
-  const deleteUpdated = function (id) {
-    const deletedTodos = todos.filter((todo) => {
-      return todo.id !== id;
+
+  const toggleCompleted = async function (id, completed) {
+    const { data } = await todoClient.patch(`/${id}`, {
+      completed,
     });
-    setTodos(deletedTodos);
+    console.log(data);
+    fetchTodos();
   };
+
+  const deleteUpdated = async function (id) {
+    const { data } = await todoClient.delete(`/${id}`);
+    console.log(data);
+    fetchTodos();
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
   return (
     <TodoContext.Provider
       value={{ addTodos, todos, toggleCompleted, deleteUpdated }}

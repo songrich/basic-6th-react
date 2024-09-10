@@ -10,7 +10,7 @@ function TodoItem({ todo }) {
       </p>
       <button
         onClick={function () {
-          toggleCompleted(todo.id);
+          toggleCompleted(todo.id, !todo.completed);
         }}
       >
         완료
