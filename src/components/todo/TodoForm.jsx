@@ -1,10 +1,21 @@
-import React, { useContext } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { TodoContext } from "../../context/TodoContext";
+import { postTodo } from "../../api/todoClient";
 
 function TodoForm() {
-  const { addTodos } = useContext(TodoContext);
   const [newTodo, setNewTodo] = useState("");
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (todo) => postTodo(todo),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"],
+      });
+    },
+  });
+
   const handleSubmit = function (e) {
     e.preventDefault();
     if (!newTodo.trim()) {
@@ -12,17 +23,25 @@ function TodoForm() {
     }
 
     const addTodo = {
-      id: crypto.randomUUID(),
       text: newTodo,
       completed: false,
     };
-    addTodos(addTodo);
+    mutate(addTodo);
+    console.log(addTodo);
     setNewTodo("");
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          justifyContent: "center", // 중앙 정렬
+          alignItems: "center", // 세로 가운데 정렬
+          gap: "10px", // 입력 필드와 버튼 사이 간격
+        }}
+      >
         <input
           type="text"
           placeholder="Enter a new todo"
